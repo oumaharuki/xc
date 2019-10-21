@@ -5,6 +5,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -29,5 +33,24 @@ public class CmsPageRepositoryTset {
         System.out.println(byId);
         List<CmsPage> all = cmsPageRepository.findAll();
         System.out.println(all);
+    }
+
+    @Test
+    public void testFindAllByExample(){
+        int page=1;
+        int size=10;
+
+        CmsPage cmsPage = new CmsPage();
+        cmsPage.setPageAliase("轮播");
+
+        PageRequest pageable = PageRequest.of(page, size);
+
+        ExampleMatcher matching = ExampleMatcher.matching();
+        ExampleMatcher pageAliase = matching.withMatcher("pageAliase", ExampleMatcher.GenericPropertyMatchers.contains());
+        Example<CmsPage> example=Example.of(cmsPage,pageAliase);
+        Page<CmsPage> all = cmsPageRepository.findAll(example,pageable);
+
+        List<CmsPage> content = all.getContent();
+        System.out.println(content);
     }
 }

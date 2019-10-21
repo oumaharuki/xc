@@ -5,7 +5,18 @@ spring:
     name: xc-service-manage-cms
   jpa:
     show-sql: true
-data:
-  mongodb:
-    uri: mongodb://root:root@localhost:27017
-    database: xc_cms
+  data:
+    mongodb:
+      uri: mongodb://abc:123456@localhost:27017/xc_cms
+      authentication-database: xc_cms
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core: debug
+
+
+
+
