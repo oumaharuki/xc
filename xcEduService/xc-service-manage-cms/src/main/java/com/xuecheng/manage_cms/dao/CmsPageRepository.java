@@ -10,5 +10,5 @@ import java.util.List;
 public interface CmsPageRepository extends MongoRepository<CmsPage,String>{
     //根据页面名称查询
     CmsPage findByPageName(String pageName);
-    List<CmsPage> findByPageAliase(String ss);
+    CmsPage findByPageNameAndSiteIdAndPageWebPath(String siteId,String pageName,String pagewebpath);
 }

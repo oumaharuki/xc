@@ -1,6 +1,8 @@
 package com.xuecheng.manage_cms.dao;
 
 import com.xuecheng.framework.domain.cms.CmsPage;
+import com.xuecheng.framework.domain.cms.response.CmsPageResult;
+import com.xuecheng.manage_cms.service.PageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class CmsPageRepositoryTset {
 
     @Autowired
     CmsPageRepository cmsPageRepository;
+
+    @Autowired
+    PageService pageService;
     @Test
     public void testFindAll(){
         CmsPage cmsPage = cmsPageRepository.findByPageName("测试页面");
@@ -52,5 +57,16 @@ public class CmsPageRepositoryTset {
 
         List<CmsPage> content = all.getContent();
         System.out.println(content);
+    }
+
+    @Test
+    public void testAdd(){
+        CmsPage cmsPage = new CmsPage();
+        cmsPage.setSiteId("5a751fab6abb5044e0d19ea1");
+        cmsPage.setPageName("index.html");
+        cmsPage.setPageWebPath("F:\\develop\\xc_portal_static\\");
+
+        CmsPageResult res = pageService.add(cmsPage);
+        System.out.println(res);
     }
 }

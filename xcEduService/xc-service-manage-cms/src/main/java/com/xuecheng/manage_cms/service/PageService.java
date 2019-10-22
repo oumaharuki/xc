@@ -1,5 +1,9 @@
 package com.xuecheng.manage_cms.service;
 
+import com.xuecheng.framework.domain.cms.response.CmsCode;
+import com.xuecheng.framework.domain.cms.response.CmsPageResult;
+import com.xuecheng.framework.exception.CustomException;
+import com.xuecheng.framework.exception.ExceptionCast;
 import org.apache.commons.lang3.StringUtils;
 import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
@@ -64,5 +68,32 @@ public class PageService {
         queryResult.setTotal(all.getTotalElements());
         QueryResponseResult queryResponseResult = new QueryResponseResult(CommonCode.SUCCESS,queryResult);
         return queryResponseResult;
+    }
+
+    /* *
+     *功能描述  新增页面
+     * @author
+     * @date 2019-10-22
+     * @param [cmsPage]
+     * @return com.xuecheng.framework.domain.cms.response.CmsPageResult
+     */
+    public CmsPageResult add(CmsPage cmsPage) {
+        if(cmsPage==null){
+            ExceptionCast.cast(CommonCode.FAIL);
+        }
+
+        CmsPage byPageNameAndSiteidAndPageWebPath = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getSiteId(),
+                cmsPage.getPageName(), cmsPage.getPageWebPath());
+
+        if(byPageNameAndSiteidAndPageWebPath!=null){
+            ExceptionCast.cast(CmsCode.CMS_ADDPAGE_EXISTSNAME);
+        }
+        if(byPageNameAndSiteidAndPageWebPath==null){
+            cmsPage.setPageId(null);
+            cmsPageRepository.save(cmsPage);
+            return new CmsPageResult(CommonCode.SUCCESS,cmsPage);
+        }
+        return new CmsPageResult(CommonCode.FAIL,null);
+
     }
 }
