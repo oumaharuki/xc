@@ -1,8 +1,7 @@
-package com.xuecheng.manage_cms.service;
+package com.xuecheng.manage_cms_client.service;
 
 import com.xuecheng.framework.domain.cms.response.CmsCode;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
-import com.xuecheng.framework.exception.CustomException;
 import com.xuecheng.framework.exception.ExceptionCast;
 import org.apache.commons.lang3.StringUtils;
 import com.xuecheng.framework.domain.cms.CmsPage;
@@ -10,14 +9,13 @@ import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
-import com.xuecheng.manage_cms.dao.CmsPageRepository;
+import com.xuecheng.manage_cms_client.dao.CmsPageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * @author
@@ -82,18 +80,17 @@ public class PageService {
             ExceptionCast.cast(CommonCode.FAIL);
         }
 
-        CmsPage byPageNameAndSiteidAndPageWebPath = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getSiteId(),
-                cmsPage.getPageName(), cmsPage.getPageWebPath());
+        CmsPage byPageNameAndSiteidAndPageWebPath = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(
+                cmsPage.getPageName(),
+                cmsPage.getSiteId(),
+                cmsPage.getPageWebPath());
 
         if(byPageNameAndSiteidAndPageWebPath!=null){
             ExceptionCast.cast(CmsCode.CMS_ADDPAGE_EXISTSNAME);
         }
-        if(byPageNameAndSiteidAndPageWebPath==null){
-            cmsPage.setPageId(null);
-            cmsPageRepository.save(cmsPage);
-            return new CmsPageResult(CommonCode.SUCCESS,cmsPage);
-        }
-        return new CmsPageResult(CommonCode.FAIL,null);
+        cmsPage.setPageId(null);
+        cmsPageRepository.save(cmsPage);
+        return new CmsPageResult(CommonCode.SUCCESS,cmsPage);
 
     }
 }

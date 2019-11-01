@@ -1,8 +1,11 @@
-package com.xuecheng.manage_cms.dao;
+package com.xuecheng.manage_cms_client.dao;
 
 import com.xuecheng.framework.domain.cms.CmsPage;
+import com.xuecheng.framework.domain.cms.response.CmsCode;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
-import com.xuecheng.manage_cms.service.PageService;
+import com.xuecheng.framework.exception.ExceptionCast;
+import com.xuecheng.framework.model.response.CommonCode;
+import com.xuecheng.manage_cms_client.service.PageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +14,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -68,5 +70,23 @@ public class CmsPageRepositoryTset {
 
         CmsPageResult res = pageService.add(cmsPage);
         System.out.println(res);
+    }
+
+    @Test
+    public void testException(){
+        CmsPage cmsPage = new CmsPage();
+        cmsPage.setSiteId("5a751fab6abb5044e0d19ea1");
+        cmsPage.setPageName("index.html");
+        cmsPage.setPageWebPath("F:\\develop\\xc_portal_static\\");
+        if(cmsPage==null){
+            ExceptionCast.cast(CommonCode.FAIL);
+        }
+
+        CmsPage byPageNameAndSiteidAndPageWebPath = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getSiteId(),
+                cmsPage.getPageName(), cmsPage.getPageWebPath());
+
+        if(byPageNameAndSiteidAndPageWebPath!=null){
+            ExceptionCast.cast(CmsCode.CMS_ADDPAGE_EXISTSNAME);
+        }
     }
 }
